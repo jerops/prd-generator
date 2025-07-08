@@ -342,6 +342,7 @@ export function PRDForm() {
         onClose={() => setPreviewModal(false)}
         content={previewContent}
         onExport={handleExport}
+        projectName={form.getValues().projectName}
       />
     </div>
   );

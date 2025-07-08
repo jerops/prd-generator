@@ -378,7 +378,21 @@ export function TechnicalSection({ form }: TechnicalSectionProps) {
           name="dependencies"
           render={() => (
             <FormItem>
-              <FormLabel>Dependencies</FormLabel>
+              <div className="flex items-center justify-between mb-2">
+                <FormLabel>Dependencies</FormLabel>
+                {canSuggest && (
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={generateTechnicalSuggestions}
+                    className="text-amber-600 border-amber-200 hover:bg-amber-50"
+                  >
+                    <Sparkles className="w-4 h-4 mr-1" />
+                    Smart Dependencies
+                  </Button>
+                )}
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[
                   { value: 'apis', label: 'External APIs', icon: '🔌' },

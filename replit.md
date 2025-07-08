@@ -96,6 +96,9 @@ Changelog:
 - July 08, 2025. Initial setup
 - July 08, 2025. UX improvements: Hidden next button on final section, auto-populate success metrics and completion criteria from core features
 - July 08, 2025. Smart technical suggestions: Added intelligent auto-suggestions for platform selection, technology stack (React vs Vanilla JS), and technical requirements based on project context
+- July 08, 2025. GitHub Pages deployment: Added one-click deployment button with pre-configured setup files and GitHub Actions workflow
+- July 08, 2025. Contextual tooltips: Added helpful tooltips throughout the form to guide users through complex decisions
+- July 08, 2025. Enhanced dependencies: Smart dependency suggestions now visible in UI with intelligent recommendations
 ```
 
 ## User Preferences

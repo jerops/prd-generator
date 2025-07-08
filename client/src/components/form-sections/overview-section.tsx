@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { PRDFormData } from "@/types/prd";
 import { Info, Sparkles } from "lucide-react";
+import { ContextualTooltip } from "@/components/contextual-tooltip";
 
 interface OverviewSectionProps {
   form: UseFormReturn<PRDFormData>;
@@ -59,7 +60,10 @@ export function OverviewSection({ form }: OverviewSectionProps) {
           name="projectName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Project Name *</FormLabel>
+              <div className="flex items-center gap-2">
+                <FormLabel>Project Name *</FormLabel>
+                <ContextualTooltip content="A clear, descriptive name for your project. This will be used as the filename when exporting." />
+              </div>
               <FormControl>
                 <Input placeholder="Enter your project name" {...field} />
               </FormControl>
@@ -75,7 +79,10 @@ export function OverviewSection({ form }: OverviewSectionProps) {
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between mb-2">
-                <FormLabel>What are you building? *</FormLabel>
+                <div className="flex items-center gap-2">
+                  <FormLabel>What are you building? *</FormLabel>
+                  <ContextualTooltip content="Browser apps can be deployed to GitHub Pages or used locally. Choose based on your primary use case." />
+                </div>
                 {canSuggestProjectType && (
                   <Button 
                     type="button"
@@ -137,7 +144,10 @@ export function OverviewSection({ form }: OverviewSectionProps) {
           name="targetUsers"
           render={() => (
             <FormItem>
-              <FormLabel>Who is this for? *</FormLabel>
+              <div className="flex items-center gap-2">
+                <FormLabel>Who is this for? *</FormLabel>
+                <ContextualTooltip content="Select all that apply. This helps determine the best technology choices and deployment options." />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[
                   { value: 'yourself', label: 'Yourself', icon: '👤' },
@@ -183,7 +193,10 @@ export function OverviewSection({ form }: OverviewSectionProps) {
           name="motivation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Main motivation *</FormLabel>
+              <div className="flex items-center gap-2">
+                <FormLabel>Main motivation *</FormLabel>
+                <ContextualTooltip content="Understanding the primary goal helps tailor the solution and set appropriate success metrics." />
+              </div>
               <FormControl>
                 <RadioGroup onValueChange={field.onChange} value={field.value}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
