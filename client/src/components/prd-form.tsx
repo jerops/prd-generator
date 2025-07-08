@@ -302,14 +302,15 @@ export function PRDForm() {
                 </Button>
               </div>
 
-              <Button
-                type="button"
-                onClick={handleNext}
-                disabled={currentSectionIndex === sections.length - 1}
-              >
-                Next
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+              {currentSectionIndex < sections.length - 1 && (
+                <Button
+                  type="button"
+                  onClick={handleNext}
+                >
+                  Next
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              )}
             </div>
           </form>
         </Form>

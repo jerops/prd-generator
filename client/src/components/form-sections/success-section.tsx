@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PRDFormData } from "@/types/prd";
-import { Target, Plus, X, CheckSquare } from "lucide-react";
+import { Target, Plus, X, CheckSquare, Sparkles } from "lucide-react";
 
 interface SuccessSectionProps {
   form: UseFormReturn<PRDFormData>;
@@ -15,6 +15,7 @@ interface SuccessSectionProps {
 export function SuccessSection({ form }: SuccessSectionProps) {
   const successMetrics = form.watch('successMetrics') || [];
   const doneItems = form.watch('doneItems') || [];
+  const coreFeatures = form.watch('coreFeatures') || [];
 
   const addMetric = () => {
     const current = form.getValues('successMetrics') || [];
@@ -50,6 +51,29 @@ export function SuccessSection({ form }: SuccessSectionProps) {
     form.setValue('doneItems', updated);
   };
 
+  const generateMetricsFromFeatures = () => {
+    const metrics = coreFeatures.map(feature => ({
+      name: feature.toLowerCase().includes('download') ? 'Successful downloads' :
+            feature.toLowerCase().includes('extract') ? 'Extraction accuracy' :
+            feature.toLowerCase().includes('upload') ? 'Upload success rate' :
+            feature.toLowerCase().includes('process') ? 'Processing speed' :
+            `${feature} completion rate`,
+      target: feature.toLowerCase().includes('speed') || feature.toLowerCase().includes('time') ? '< 5' :
+             feature.toLowerCase().includes('accuracy') || feature.toLowerCase().includes('success') ? '95' : '100',
+      unit: feature.toLowerCase().includes('speed') || feature.toLowerCase().includes('time') ? 'seconds' :
+           feature.toLowerCase().includes('accuracy') || feature.toLowerCase().includes('success') ? '%' : '%'
+    }));
+    form.setValue('successMetrics', [...successMetrics, ...metrics]);
+  };
+
+  const generateDoneItemsFromFeatures = () => {
+    const items = coreFeatures.map(feature => 
+      `${feature} feature is implemented and tested`
+    );
+    items.push('All core features working together seamlessly', 'User testing completed successfully', 'Documentation is complete');
+    form.setValue('doneItems', [...doneItems, ...items]);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -68,15 +92,29 @@ export function SuccessSection({ form }: SuccessSectionProps) {
         <div>
           <div className="flex items-center justify-between mb-4">
             <FormLabel className="text-sm font-medium text-gray-700">Success Metrics *</FormLabel>
-            <Button 
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={addMetric}
-            >
-              <Plus className="w-4 h-4 mr-1" />
-              Add Metric
-            </Button>
+            <div className="flex space-x-2">
+              {coreFeatures.length > 0 && (
+                <Button 
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={generateMetricsFromFeatures}
+                  className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                >
+                  <Sparkles className="w-4 h-4 mr-1" />
+                  Auto-populate from Features
+                </Button>
+              )}
+              <Button 
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addMetric}
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Add Metric
+              </Button>
+            </div>
           </div>
           <div className="space-y-3">
             {successMetrics.map((metric, index) => (
@@ -140,15 +178,29 @@ export function SuccessSection({ form }: SuccessSectionProps) {
         <div>
           <div className="flex items-center justify-between mb-4">
             <FormLabel className="text-sm font-medium text-gray-700">Definition of Done *</FormLabel>
-            <Button 
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={addDoneItem}
-            >
-              <Plus className="w-4 h-4 mr-1" />
-              Add Item
-            </Button>
+            <div className="flex space-x-2">
+              {coreFeatures.length > 0 && (
+                <Button 
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={generateDoneItemsFromFeatures}
+                  className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                >
+                  <Sparkles className="w-4 h-4 mr-1" />
+                  Auto-populate from Features
+                </Button>
+              )}
+              <Button 
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addDoneItem}
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Add Item
+              </Button>
+            </div>
           </div>
           <div className="space-y-3">
             {doneItems.map((item, index) => (

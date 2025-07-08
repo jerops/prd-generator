@@ -94,10 +94,12 @@ The application uses a full-stack deployment approach:
 ```
 Changelog:
 - July 08, 2025. Initial setup
+- July 08, 2025. UX improvements: Hidden next button on final section, auto-populate success metrics and completion criteria from core features
 ```
 
 ## User Preferences
 
 ```
 Preferred communication style: Simple, everyday language.
+UX feedback: Next button should be hidden (not disabled) on final section, auto-populate success metrics and completion criteria from features to reduce manual work
 ```
