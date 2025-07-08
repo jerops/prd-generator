@@ -4,8 +4,9 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { PRDFormData } from "@/types/prd";
-import { Info } from "lucide-react";
+import { Info, Sparkles } from "lucide-react";
 
 interface OverviewSectionProps {
   form: UseFormReturn<PRDFormData>;
@@ -14,6 +15,30 @@ interface OverviewSectionProps {
 export function OverviewSection({ form }: OverviewSectionProps) {
   const projectType = form.watch('projectType');
   const targetUsers = form.watch('targetUsers') || [];
+
+  const suggestProjectType = () => {
+    // Smart suggestions based on target users and deployment context
+    let suggestion = '';
+    
+    // If targeting external users or clients, likely a browser app (GitHub Pages)
+    if (targetUsers.includes('external') || targetUsers.includes('clients')) {
+      suggestion = 'browser'; // Perfect for GitHub Pages hosting
+    }
+    // If targeting team members, could be browser app for easy sharing
+    else if (targetUsers.includes('team')) {
+      suggestion = 'browser'; // Easy to share via GitHub Pages
+    }
+    // If targeting yourself, could be local desktop tool or browser app
+    else if (targetUsers.includes('yourself')) {
+      suggestion = 'desktop'; // Local desktop tool for personal use
+    }
+    
+    if (suggestion) {
+      form.setValue('projectType', suggestion);
+    }
+  };
+
+  const canSuggestProjectType = targetUsers.length > 0;
 
   return (
     <Card>
@@ -49,7 +74,21 @@ export function OverviewSection({ form }: OverviewSectionProps) {
           name="projectType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>What are you building? *</FormLabel>
+              <div className="flex items-center justify-between mb-2">
+                <FormLabel>What are you building? *</FormLabel>
+                {canSuggestProjectType && (
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={suggestProjectType}
+                    className="text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+                  >
+                    <Sparkles className="w-4 h-4 mr-1" />
+                    Smart Suggestion
+                  </Button>
+                )}
+              </div>
               <FormControl>
                 <RadioGroup onValueChange={field.onChange} value={field.value}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
