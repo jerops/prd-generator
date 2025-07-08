@@ -22,6 +22,33 @@ export function SolutionSection({ form }: SolutionSectionProps) {
   const platform = form.watch('platform');
   const complexity = form.watch('complexity');
 
+  const suggestPlatform = () => {
+    let platformSuggestion = '';
+    
+    // Based on project type and target users
+    if (projectType === 'website' || projectType === 'webapp') {
+      platformSuggestion = 'browser';
+    } else if (projectType === 'mobile' || targetUsers.includes('mobile')) {
+      platformSuggestion = 'mobile';
+    } else if (projectType === 'desktop' || targetUsers.includes('desktop')) {
+      platformSuggestion = 'desktop';
+    } else if (projectType === 'api' || projectType === 'service') {
+      platformSuggestion = 'webservice';
+    } else if (projectType === 'tool' || projectType === 'script') {
+      platformSuggestion = 'cli';
+    } else if (projectType === 'extension') {
+      platformSuggestion = 'extension';
+    } else if (targetUsers.includes('external') || targetUsers.includes('clients')) {
+      platformSuggestion = 'browser'; // Default for external users
+    } else if (targetUsers.includes('team') || targetUsers.includes('yourself')) {
+      platformSuggestion = 'browser'; // Default for internal tools
+    }
+    
+    if (platformSuggestion) {
+      form.setValue('platform', platformSuggestion);
+    }
+  };
+
   const suggestTechStack = () => {
     let suggestions = [];
     
@@ -50,6 +77,7 @@ export function SolutionSection({ form }: SolutionSectionProps) {
     form.setValue('techStack', suggestions);
   };
 
+  const canSuggestPlatform = projectType && targetUsers.length > 0;
   const canSuggestTech = projectType && (platform || complexity);
 
   return (
@@ -90,7 +118,21 @@ export function SolutionSection({ form }: SolutionSectionProps) {
           name="platform"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Primary platform *</FormLabel>
+              <div className="flex items-center justify-between mb-2">
+                <FormLabel>Primary platform *</FormLabel>
+                {canSuggestPlatform && (
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={suggestPlatform}
+                    className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                  >
+                    <Sparkles className="w-4 h-4 mr-1" />
+                    Suggest Platform
+                  </Button>
+                )}
+              </div>
               <FormControl>
                 <RadioGroup onValueChange={field.onChange} value={field.value}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
