@@ -126,7 +126,7 @@ export function PRDForm() {
     }
     
     setCompletedSections(newCompletedSections);
-  }, [form.watch()]);
+  }, [form.watch() && JSON.stringify(form.watch())]);
 
   // Auto-save to localStorage
   useEffect(() => {
