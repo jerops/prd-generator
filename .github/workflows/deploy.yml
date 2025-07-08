@@ -22,7 +22,8 @@ jobs:
       - run: npm install
       - run: npm run build
 
-      - uses: actions/upload-pages-artifact@v2
+      - name: Upload built site
+        uses: actions/upload-pages-artifact@v2
         with:
           path: dist
 
@@ -34,6 +35,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      - name: Prevent deprecated upload-artifact
+        run: echo "no-op step before deploy"
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
