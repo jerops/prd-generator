@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { PRDFormData } from "@/types/prd";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, Sparkles } from "lucide-react";
 
 interface SolutionSectionProps {
   form: UseFormReturn<PRDFormData>;
@@ -14,6 +15,42 @@ interface SolutionSectionProps {
 
 export function SolutionSection({ form }: SolutionSectionProps) {
   const techStack = form.watch('techStack') || [];
+  
+  // Watch project context for smart suggestions
+  const projectType = form.watch('projectType');
+  const targetUsers = form.watch('targetUsers') || [];
+  const platform = form.watch('platform');
+  const complexity = form.watch('complexity');
+
+  const suggestTechStack = () => {
+    let suggestions = [];
+    
+    // Based on platform
+    if (platform === 'browser' || projectType === 'browser') {
+      if (complexity === 'simple') {
+        suggestions = ['vanilla'];
+      } else {
+        suggestions = ['react', 'nodejs'];
+      }
+    } else if (platform === 'desktop' || projectType === 'desktop') {
+      suggestions = ['nodejs', 'python'];
+    } else if (platform === 'mobile' || projectType === 'mobile') {
+      suggestions = ['react'];
+    } else if (platform === 'cli' || projectType === 'cli') {
+      suggestions = ['python', 'nodejs'];
+    } else if (platform === 'webservice' || projectType === 'api') {
+      suggestions = ['nodejs', 'python'];
+    }
+    
+    // Adjust based on complexity
+    if (complexity === 'complex' && !suggestions.includes('nodejs')) {
+      suggestions.push('nodejs');
+    }
+    
+    form.setValue('techStack', suggestions);
+  };
+
+  const canSuggestTech = projectType && (platform || complexity);
 
   return (
     <Card>
@@ -86,7 +123,21 @@ export function SolutionSection({ form }: SolutionSectionProps) {
           name="techStack"
           render={() => (
             <FormItem>
-              <FormLabel>Technology stack</FormLabel>
+              <div className="flex items-center justify-between mb-2">
+                <FormLabel>Technology stack</FormLabel>
+                {canSuggestTech && (
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={suggestTechStack}
+                    className="text-green-600 border-green-200 hover:bg-green-50"
+                  >
+                    <Sparkles className="w-4 h-4 mr-1" />
+                    Suggest Stack
+                  </Button>
+                )}
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[
                   { value: 'vanilla', label: 'Vanilla JavaScript', icon: '🟡' },

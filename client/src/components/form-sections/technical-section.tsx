@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PRDFormData } from "@/types/prd";
-import { Settings } from "lucide-react";
+import { Settings, Sparkles } from "lucide-react";
 
 interface TechnicalSectionProps {
   form: UseFormReturn<PRDFormData>;
@@ -14,18 +14,109 @@ interface TechnicalSectionProps {
 export function TechnicalSection({ form }: TechnicalSectionProps) {
   const browserSupport = form.watch('browserSupport') || [];
   const dependencies = form.watch('dependencies') || [];
+  
+  // Watch project context for smart suggestions
+  const projectType = form.watch('projectType');
+  const targetUsers = form.watch('targetUsers') || [];
+  const platform = form.watch('platform');
+  const complexity = form.watch('complexity');
+  const techStack = form.watch('techStack') || [];
+
+  const generateTechnicalSuggestions = () => {
+    const suggestions: Partial<PRDFormData> = {};
+
+    // Browser support suggestions - default to all browsers for GitHub/local usage
+    if (projectType === 'browser' || platform === 'browser') {
+      suggestions.browserSupport = ['chrome', 'firefox', 'safari', 'edge', 'mobile'];
+    } else if (projectType === 'mobile' || platform === 'mobile') {
+      suggestions.browserSupport = ['mobile'];
+    } else {
+      // For GitHub/local projects, support all browsers
+      suggestions.browserSupport = ['chrome', 'firefox', 'safari', 'edge', 'mobile'];
+    }
+
+    // Performance requirements based on complexity and users
+    if (complexity === 'simple') {
+      suggestions.maxFileSize = '10';
+      suggestions.responseTime = '2';
+      suggestions.concurrentUsers = '10';
+    } else if (complexity === 'moderate') {
+      suggestions.maxFileSize = '50';
+      suggestions.responseTime = '5';
+      suggestions.concurrentUsers = '100';
+    } else if (complexity === 'complex') {
+      suggestions.maxFileSize = '200';
+      suggestions.responseTime = '10';
+      suggestions.concurrentUsers = '1000';
+    }
+
+    // Data handling suggestions
+    if (targetUsers.includes('yourself') && !targetUsers.includes('external')) {
+      suggestions.dataHandling = 'local';
+    } else if (targetUsers.includes('team') || targetUsers.includes('clients')) {
+      suggestions.dataHandling = 'cloud';
+    } else if (targetUsers.includes('external')) {
+      suggestions.dataHandling = 'database';
+    }
+
+    // Security level suggestions
+    if (targetUsers.includes('external')) {
+      suggestions.securityLevel = 'sensitive';
+    } else if (targetUsers.includes('clients')) {
+      suggestions.securityLevel = 'internal';
+    } else if (targetUsers.includes('yourself')) {
+      suggestions.securityLevel = 'public';
+    }
+
+    // Dependencies suggestions
+    const deps = [];
+    if (platform === 'browser' && (techStack.includes('react') || complexity !== 'simple')) {
+      deps.push('libraries');
+    }
+    if (suggestions.dataHandling === 'cloud' || suggestions.dataHandling === 'database') {
+      deps.push('apis');
+    }
+    if (projectType === 'extension' || platform === 'extension') {
+      deps.push('permissions');
+    }
+    suggestions.dependencies = deps;
+
+    // Apply suggestions to form
+    Object.entries(suggestions).forEach(([key, value]) => {
+      if (value !== undefined) {
+        form.setValue(key as keyof PRDFormData, value);
+      }
+    });
+  };
+
+  // Check if we have enough context for suggestions
+  const canSuggest = projectType && targetUsers.length > 0 && (platform || complexity);
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center">
-          <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-            <Settings className="w-5 h-5 text-purple-600" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+              <Settings className="w-5 h-5 text-purple-600" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl">Technical Considerations</CardTitle>
+              <CardDescription>Define technical requirements and constraints</CardDescription>
+            </div>
           </div>
-          <div>
-            <CardTitle className="text-2xl">Technical Considerations</CardTitle>
-            <CardDescription>Define technical requirements and constraints</CardDescription>
-          </div>
+          {canSuggest && (
+            <Button 
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={generateTechnicalSuggestions}
+              className="text-purple-600 border-purple-200 hover:bg-purple-50"
+            >
+              <Sparkles className="w-4 h-4 mr-1" />
+              Smart Suggestions
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
