@@ -25,9 +25,9 @@ export function SolutionSection({ form }: SolutionSectionProps) {
   const suggestPlatform = () => {
     let platformSuggestion = '';
     
-    // Based on project type and target users
-    if (projectType === 'website' || projectType === 'webapp') {
-      platformSuggestion = 'browser';
+    // Browser platform works locally AND on GitHub Pages - maximum flexibility
+    if (projectType === 'browser' || projectType === 'webapp') {
+      platformSuggestion = 'browser'; // Works locally + GitHub Pages
     } else if (projectType === 'mobile' || targetUsers.includes('mobile')) {
       platformSuggestion = 'mobile';
     } else if (projectType === 'desktop' || targetUsers.includes('desktop')) {
@@ -38,10 +38,9 @@ export function SolutionSection({ form }: SolutionSectionProps) {
       platformSuggestion = 'cli';
     } else if (projectType === 'extension') {
       platformSuggestion = 'extension';
-    } else if (targetUsers.includes('external') || targetUsers.includes('clients')) {
-      platformSuggestion = 'browser'; // Default for external users
-    } else if (targetUsers.includes('team') || targetUsers.includes('yourself')) {
-      platformSuggestion = 'browser'; // Default for internal tools
+    } else {
+      // Default to browser for flexibility - works locally and GitHub Pages
+      platformSuggestion = 'browser';
     }
     
     if (platformSuggestion) {

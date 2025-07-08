@@ -17,20 +17,20 @@ export function OverviewSection({ form }: OverviewSectionProps) {
   const targetUsers = form.watch('targetUsers') || [];
 
   const suggestProjectType = () => {
-    // Smart suggestions based on target users and deployment context
+    // Smart suggestions based on target users and deployment flexibility
     let suggestion = '';
     
-    // If targeting external users or clients, likely a browser app (GitHub Pages)
+    // Browser apps work both on GitHub Pages AND locally - maximum flexibility
     if (targetUsers.includes('external') || targetUsers.includes('clients')) {
-      suggestion = 'browser'; // Perfect for GitHub Pages hosting
+      suggestion = 'browser'; // Works on GitHub Pages + locally
     }
-    // If targeting team members, could be browser app for easy sharing
+    // Team sharing works great with browser apps (GitHub Pages + local dev)
     else if (targetUsers.includes('team')) {
-      suggestion = 'browser'; // Easy to share via GitHub Pages
+      suggestion = 'browser'; // Easy sharing via GitHub Pages, local development
     }
-    // If targeting yourself, could be local desktop tool or browser app
+    // Personal use - browser apps still great for GitHub Pages + local flexibility
     else if (targetUsers.includes('yourself')) {
-      suggestion = 'desktop'; // Local desktop tool for personal use
+      suggestion = 'browser'; // Use locally or deploy to GitHub Pages anytime
     }
     
     if (suggestion) {

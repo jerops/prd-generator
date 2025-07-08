@@ -51,13 +51,13 @@ export function TechnicalSection({ form }: TechnicalSectionProps) {
       suggestions.concurrentUsers = '1000';
     }
 
-    // Data handling suggestions
+    // Data handling suggestions - optimized for local + GitHub Pages flexibility
     if (targetUsers.includes('yourself') && !targetUsers.includes('external')) {
-      suggestions.dataHandling = 'local';
+      suggestions.dataHandling = 'local'; // Works great locally and on GitHub Pages
     } else if (targetUsers.includes('team') || targetUsers.includes('clients')) {
-      suggestions.dataHandling = 'cloud';
+      suggestions.dataHandling = 'local'; // Start simple, works locally + GitHub Pages
     } else if (targetUsers.includes('external')) {
-      suggestions.dataHandling = 'database';
+      suggestions.dataHandling = 'local'; // GitHub Pages compatible, can upgrade later
     }
 
     // Security level suggestions
