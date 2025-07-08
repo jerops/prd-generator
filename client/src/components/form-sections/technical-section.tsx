@@ -22,6 +22,7 @@ export function TechnicalSection({ form }: TechnicalSectionProps) {
   const platform = form.watch('platform');
   const complexity = form.watch('complexity');
   const techStack = form.watch('techStack') || [];
+  const coreFeatures = form.watch('coreFeatures') || [];
 
   const generateTechnicalSuggestions = () => {
     const suggestions: Partial<PRDFormData> = {};
@@ -69,18 +70,87 @@ export function TechnicalSection({ form }: TechnicalSectionProps) {
       suggestions.securityLevel = 'public';
     }
 
-    // Dependencies suggestions
+    // Smart dependency suggestions based on project context
     const deps = [];
-    if (platform === 'browser' && (techStack.includes('react') || complexity !== 'simple')) {
-      deps.push('libraries');
+    
+    // Based on technology stack
+    if (techStack.includes('react')) {
+      deps.push('libraries'); // React ecosystem libraries
+    } else if (techStack.includes('vanilla') && complexity !== 'simple') {
+      deps.push('libraries'); // Utility libraries for complex vanilla JS
     }
-    if (suggestions.dataHandling === 'cloud' || suggestions.dataHandling === 'database') {
-      deps.push('apis');
+    
+    // Based on project type and features
+    if (projectType === 'browser' || platform === 'browser') {
+      if (complexity === 'moderate' || complexity === 'complex') {
+        deps.push('libraries'); // UI libraries, state management
+      }
     }
+    
+    // API dependencies for data-heavy projects
+    if (targetUsers.includes('external') || targetUsers.includes('clients')) {
+      deps.push('apis'); // Likely needs external data or services
+    }
+    
+    // Extension-specific dependencies
     if (projectType === 'extension' || platform === 'extension') {
-      deps.push('permissions');
+      deps.push('permissions'); // Browser extension permissions
     }
-    suggestions.dependencies = deps;
+    
+    // Mobile-specific dependencies
+    if (projectType === 'mobile' || platform === 'mobile') {
+      deps.push('libraries'); // Mobile UI libraries
+    }
+    
+    // Desktop app dependencies
+    if (projectType === 'desktop' || platform === 'desktop') {
+      deps.push('libraries'); // Desktop framework libraries
+    }
+    
+    // API/service dependencies
+    if (projectType === 'api' || platform === 'webservice') {
+      deps.push('apis'); // External services and databases
+      deps.push('libraries'); // Backend libraries
+    }
+    
+    // Feature-based dependency suggestions
+    const featureText = coreFeatures.join(' ').toLowerCase();
+    
+    // Check for specific feature patterns that require dependencies
+    if (featureText.includes('chart') || featureText.includes('graph') || featureText.includes('visualization')) {
+      deps.push('libraries'); // Charting libraries like Chart.js
+    }
+    
+    if (featureText.includes('map') || featureText.includes('location') || featureText.includes('geo')) {
+      deps.push('apis'); // Map APIs like Google Maps
+    }
+    
+    if (featureText.includes('payment') || featureText.includes('stripe') || featureText.includes('checkout')) {
+      deps.push('apis'); // Payment processing APIs
+    }
+    
+    if (featureText.includes('auth') || featureText.includes('login') || featureText.includes('user')) {
+      deps.push('apis'); // Authentication services
+    }
+    
+    if (featureText.includes('email') || featureText.includes('notification') || featureText.includes('sms')) {
+      deps.push('apis'); // Communication APIs
+    }
+    
+    if (featureText.includes('pdf') || featureText.includes('export') || featureText.includes('download')) {
+      deps.push('libraries'); // PDF generation libraries
+    }
+    
+    if (featureText.includes('image') || featureText.includes('photo') || featureText.includes('upload')) {
+      deps.push('libraries'); // Image processing libraries
+    }
+    
+    if (featureText.includes('animation') || featureText.includes('transition') || featureText.includes('interactive')) {
+      deps.push('libraries'); // Animation libraries
+    }
+    
+    // Remove duplicates and suggest based on what we found
+    suggestions.dependencies = [...new Set(deps)];
 
     // Apply suggestions to form
     Object.entries(suggestions).forEach(([key, value]) => {
