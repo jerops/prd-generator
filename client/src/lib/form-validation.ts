@@ -53,9 +53,18 @@ export const successSchema = z.object({
   reviewProcess: z.string().optional(),
 });
 
+export const resourcesSchema = z.object({
+  referenceDocuments: z.array(z.string()).default([]),
+  dataSourceUrls: z.array(z.string()).default([]),
+  designReferences: z.array(z.string()).default([]),
+  competitorExamples: z.array(z.string()).default([]),
+  technicalReferences: z.array(z.string()).default([]),
+});
+
 export const fullPRDSchema = overviewSchema
   .merge(problemSchema)
   .merge(solutionSchema)
   .merge(featuresSchema)
   .merge(technicalSchema)
-  .merge(successSchema);
+  .merge(successSchema)
+  .merge(resourcesSchema);

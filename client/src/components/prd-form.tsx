@@ -16,6 +16,7 @@ import { SolutionSection } from "@/components/form-sections/solution-section";
 import { FeaturesSection } from "@/components/form-sections/features-section";
 import { TechnicalSection } from "@/components/form-sections/technical-section";
 import { SuccessSection } from "@/components/form-sections/success-section";
+import { ResourcesSection } from "@/components/form-sections/resources-section";
 import { ArrowLeft, ArrowRight, Eye, Download, Save, FolderOpen } from "lucide-react";
 
 const defaultValues: PRDFormData = {
@@ -50,6 +51,13 @@ const defaultValues: PRDFormData = {
   startDate: '',
   endDate: '',
   reviewProcess: '',
+  
+  // Resources & References
+  referenceDocuments: [],
+  dataSourceUrls: [],
+  designReferences: [],
+  competitorExamples: [],
+  technicalReferences: [],
 };
 
 export function PRDForm() {
@@ -65,7 +73,7 @@ export function PRDForm() {
     mode: 'onChange',
   });
 
-  const sections: FormSection[] = ['overview', 'problem', 'solution', 'features', 'technical', 'success'];
+  const sections: FormSection[] = ['overview', 'problem', 'solution', 'features', 'technical', 'success', 'resources'];
   const currentSectionIndex = sections.indexOf(currentSection);
 
   // Calculate progress
@@ -90,6 +98,11 @@ export function PRDForm() {
       completedCount++;
     }
     if (formData.successMetrics.length > 0 && formData.doneItems.length > 0) {
+      completedCount++;
+    }
+    if ((formData.referenceDocuments?.length || 0) > 0 || (formData.dataSourceUrls?.length || 0) > 0 || 
+        (formData.designReferences?.length || 0) > 0 || (formData.competitorExamples?.length || 0) > 0 || 
+        (formData.technicalReferences?.length || 0) > 0) {
       completedCount++;
     }
     
@@ -123,6 +136,11 @@ export function PRDForm() {
     }
     if (formData.successMetrics.length > 0 && formData.doneItems.length > 0) {
       newCompletedSections.add('success');
+    }
+    if ((formData.referenceDocuments?.length || 0) > 0 || (formData.dataSourceUrls?.length || 0) > 0 || 
+        (formData.designReferences?.length || 0) > 0 || (formData.competitorExamples?.length || 0) > 0 || 
+        (formData.technicalReferences?.length || 0) > 0) {
+      newCompletedSections.add('resources');
     }
     
     setCompletedSections(newCompletedSections);
@@ -232,6 +250,8 @@ export function PRDForm() {
         return <TechnicalSection form={form} />;
       case 'success':
         return <SuccessSection form={form} />;
+      case 'resources':
+        return <ResourcesSection form={form} />;
       default:
         return null;
     }

@@ -128,7 +128,48 @@ ${data.reviewProcess || 'Not specified'}
 
 ---
 
-*Generated on ${new Date().toLocaleDateString()} using PRD Generator*`;
+*Generated on ${new Date().toLocaleDateString()} using PRD Generator*
+
+${generateResourcesSection(data)}`;
+}
+
+function generateResourcesSection(data: PRDFormData): string {
+  const hasResources = data.referenceDocuments?.length || data.dataSourceUrls?.length || 
+                      data.designReferences?.length || data.competitorExamples?.length || 
+                      data.technicalReferences?.length;
+  
+  if (!hasResources) {
+    return '';
+  }
+
+  let section = '## Resources & References\n\n';
+
+  if (data.referenceDocuments?.length) {
+    section += '### Reference Documents\n';
+    section += data.referenceDocuments.map(doc => `- ${doc}`).join('\n') + '\n\n';
+  }
+
+  if (data.dataSourceUrls?.length) {
+    section += '### Data Sources & APIs\n';
+    section += data.dataSourceUrls.map(url => `- ${url}`).join('\n') + '\n\n';
+  }
+
+  if (data.designReferences?.length) {
+    section += '### Design References\n';
+    section += data.designReferences.map(ref => `- ${ref}`).join('\n') + '\n\n';
+  }
+
+  if (data.competitorExamples?.length) {
+    section += '### Competitor Examples\n';
+    section += data.competitorExamples.map(comp => `- ${comp}`).join('\n') + '\n\n';
+  }
+
+  if (data.technicalReferences?.length) {
+    section += '### Technical References\n';
+    section += data.technicalReferences.map(tech => `- ${tech}`).join('\n') + '\n\n';
+  }
+
+  return section;
 }
 
 export function downloadMarkdown(content: string, filename: string): void {

@@ -41,6 +41,13 @@ export interface PRDFormData {
   startDate: string;
   endDate: string;
   reviewProcess: string;
+  
+  // Resources & References
+  referenceDocuments: string[];
+  dataSourceUrls: string[];
+  designReferences: string[];
+  competitorExamples: string[];
+  technicalReferences: string[];
 }
 
 export interface SuccessMetric {
@@ -49,7 +56,7 @@ export interface SuccessMetric {
   unit: string;
 }
 
-export type FormSection = 'overview' | 'problem' | 'solution' | 'features' | 'technical' | 'success';
+export type FormSection = 'overview' | 'problem' | 'solution' | 'features' | 'technical' | 'success' | 'resources';
 
 export interface SectionInfo {
   id: FormSection;

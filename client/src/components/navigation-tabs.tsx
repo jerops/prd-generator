@@ -6,7 +6,8 @@ import {
   Lightbulb, 
   List, 
   Settings, 
-  Target 
+  Target,
+  BookOpen
 } from "lucide-react";
 
 interface NavigationTabsProps {
@@ -58,6 +59,13 @@ const sections: SectionInfo[] = [
     icon: 'Target',
     isRequired: true,
   },
+  {
+    id: 'resources',
+    title: 'Resources',
+    description: 'Reference materials and sources',
+    icon: 'BookOpen',
+    isRequired: false,
+  },
 ];
 
 const iconMap = {
@@ -67,6 +75,7 @@ const iconMap = {
   List,
   Settings,
   Target,
+  BookOpen,
 };
 
 export function NavigationTabs({ currentSection, onSectionChange, completedSections }: NavigationTabsProps) {
